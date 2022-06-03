@@ -46,6 +46,11 @@ class Card(models.Model):
         return self.name
 
 
+class BacklogCard(Card):
+    class Meta:
+        proxy = True
+
+
 class Deck(models.Model):
     archetype = models.ForeignKey(Archetype, on_delete=models.CASCADE)
     cards = models.ManyToManyField(Card, blank=True)

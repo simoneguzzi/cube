@@ -1,10 +1,10 @@
+import re
 from django.contrib import admin
 from django.db.models import Count, Q
-from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 
 
-from .models import Archetype, Card, Color, Deck
+from .models import Archetype, BacklogCard, Card, Color, Deck
 
 
 @admin.register(Archetype)
@@ -32,7 +32,7 @@ class CardAdmin(admin.ModelAdmin):
     actions = [ignore]
 
     def image(self, obj):
-        return format_html('<img src="{}" />', obj.image_uri)
+        return format_html('<img src="{}" width="100%"/>', obj.image_uri)
 
     @admin.display(ordering="name")
     def hover(self, obj):
@@ -46,7 +46,20 @@ class CardAdmin(admin.ModelAdmin):
             obj.image_uri,
             obj.pk,
             obj.name,
-            f"http://localhost:8000/admin/cube/card/{obj.pk}/change",
+            f"/admin/cube/card/{obj.pk}/change",
+        )
+
+
+@admin.register(BacklogCard)
+class BacklogAdmin(CardAdmin):
+    list_display = ("name", "cmc", "playable")
+    list_filter = ()
+    list_per_page = 10
+    ordering = ("oracle_id",)
+
+    def get_queryset(self, *args, **kwargs):
+        return Card.objects.filter(
+            playable=True, enabled_archetypes=None, payed_off_archetypes=None
         )
 
 
