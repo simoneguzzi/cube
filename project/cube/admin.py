@@ -18,7 +18,7 @@ class CardAdmin(admin.ModelAdmin):
     list_display = ("hover", "cmc", "playable")
     list_filter = ("playable", "enabled_archetypes", "payed_off_archetypes")
     readonly_fields = ("image",)
-    search_fields = ("name",)
+    search_fields = ("name", "type_line")
 
     def get_fields(self, request, obj=None):
         if obj:  # obj is not None, so this is an edit
