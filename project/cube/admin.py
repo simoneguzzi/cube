@@ -49,6 +49,22 @@ class CardAdmin(admin.ModelAdmin):
             f"/admin/cube/card/{obj.pk}/change",
         )
 
+    def get_object(self, request, object_id, from_field=None):
+        obj = super().get_object(request, object_id, from_field=from_field)
+        # Cache object for use in formfield_for_manytomany
+        request.card_obj = obj
+        return obj
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if (
+            db_field.name == "enabled_archetypes"
+            or db_field.name == "payed_off_archetypes"
+        ) and hasattr(request, "card_obj"):
+            kwargs["queryset"] = Archetype.objects.order_by("name")
+        return super(CardAdmin, self).formfield_for_manytomany(
+            db_field, request, **kwargs
+        )
+
 
 @admin.register(BacklogCard)
 class BacklogAdmin(CardAdmin):
