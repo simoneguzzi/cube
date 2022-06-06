@@ -46,7 +46,7 @@ class CardAdmin(admin.ModelAdmin):
             obj.image_uri,
             obj.pk,
             obj.name,
-            f"/admin/cube/card/{obj.pk}/change",
+            f"/cube/card/{obj.pk}/change",
         )
 
     def get_object(self, request, object_id, from_field=None):
