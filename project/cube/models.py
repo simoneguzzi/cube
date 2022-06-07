@@ -17,6 +17,10 @@ class Color(models.Model):
     def __str__(self):
         return self.color
 
+    def __lt__(self, other):
+        order = self.Foo.values
+        return order.index(self.color) < order.index(other.color)
+
 
 class Archetype(models.Model):
     name = models.TextField()
